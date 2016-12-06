@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sbcl --disable-debugger --load start-server.lisp
+sbcl --noinform --noprint --disable-debugger --load start-server.lisp

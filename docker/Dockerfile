@@ -4,7 +4,10 @@ MAINTAINER fchalub@br.ibm.com
 
 WORKDIR /root/
 
-RUN apt-get update -y && apt-get install -y bzip2 git python sbcl && apt-get clean
+RUN apt-get update -y && apt-get install -y git python sbcl && apt-get clean
+
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
   
 ADD https://beta.quicklisp.org/quicklisp.lisp /root/quicklisp.lisp
 COPY setup-quicklisp.lisp /root/
