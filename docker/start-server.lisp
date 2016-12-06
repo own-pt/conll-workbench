@@ -1,0 +1,5 @@
+(ql:quickload :conll-validator)
+(in-package :conll-validator)
+(setf *ud-tools* "/root/tools/validate.py")
+;; (setf *ud-tools* "/home/fcbr/repos/ud/tools/validate.py")
+(start-server)
