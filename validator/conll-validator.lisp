@@ -34,6 +34,16 @@
   (setf (hunchentoot:content-type*) "text/plain")
   (validate-ud (first file) lang))
 
+(defun read-file-to-string (f)
+  (with-output-to-string (s)
+    (let ((c 0))
+     (with-open-file (stream f)
+       (do ((line (read-line stream nil)
+                  (read-line stream nil)))
+           ((null line))
+         (format s "{~4d} ~a~%" (incf c) line))))
+    s))
+
 (hunchentoot:define-easy-handler (form-handler :uri "/form") (file lang)
   (setf (hunchentoot:content-type*) "text/html")
   (with-html-output-to-string (*standard-output* nil :prologue t)
@@ -47,8 +57,10 @@
                    (:input :type "submit"))
             (when file
               (htm
-               (:p "Validation results:")
-               (:pre (str (validate-ud (first file) lang)))))))))    
+               (:p (str (format nil "Validation results [~a]:" (second file))))
+               (:pre (str (validate-ud (first file) lang)))
+               (:p "CoNLL contents:")
+               (:pre (str (read-file-to-string (first file))))))))))
                  
 (hunchentoot:define-easy-handler (validate-handler :uri "/validate") (file)
   (setf (hunchentoot:content-type*) "application/json")
