@@ -17,28 +17,51 @@
 ;; update with the absolute path to validate.py
 (defparameter *ud-tools* nil)
 
-;; sample invokation curl -F "file=@CP9.conllu" -F "lang=pt_bosque" http://localhost:5000/validate-ud
-(hunchentoot:define-easy-handler (validate-ud-handler :uri "/validate-ud") (file lang)
-  (setf (hunchentoot:content-type*) "text/plain")
+(defun validate-ud (file lang)
   (with-output-to-string (s)
-   (inferior-shell:run (format nil "~a --lang=~a ~a" *ud-tools* lang (first file)) :on-error nil :error-output s)))
+    (inferior-shell:run (format nil "~a --lang=~a ~a" *ud-tools* lang file) :on-error nil :error-output s)
+    s))
 
-(hunchentoot:define-easy-handler (validate-handler :uri "/validate") (file)
+(defun validate-conll (file)
   (flet ((validate-sentence (s)
            (let ((h (make-hash-table :test #'equal)))
              (setf (gethash "id" h) (cl-conllu:sentence-meta-value s "sent_id"))
              (setf (gethash "valid" h)  (cl-conllu:sentence-valid? s))
-             h)))
-    (setf (hunchentoot:content-type*) "application/json")
-    (let ((sentences (cl-conllu:read-conllu (first file))))
-      (if sentences
-          (yason:with-output-to-string* ()
-            (yason:with-array ()
-              (dolist (s sentences)
-                (yason:encode-array-element (validate-sentence s)))))
-          (yason:encode-plist '(:error "invalid file"))))))
+             h)))))
+
+;; sample invokation curl -F "file=@CP9.conllu" -F "lang=pt_bosque" http://localhost:5000/validate-ud
+(hunchentoot:define-easy-handler (validate-ud-handler :uri "/validate-ud") (file lang)
+  (setf (hunchentoot:content-type*) "text/plain")
+  (validate-ud (first file) lang))
+
+(hunchentoot:define-easy-handler (form-handler :uri "/form") (file lang)
+  (setf (hunchentoot:content-type*) "text/html")
+  (with-html-output-to-string (*standard-output* nil :prologue t)
+    (:html
+     (:head (:title "CoNLL-U validator"))
+     (:body (:h1 "CoNLL-U validator")
+            (:p "Please select a file to submit for validation.")
+            (:form :action "/form" :method "POST" :enctype "multipart/form-data" 
+                   (:input :type "hidden" :name "lang" :value "pt_bosque")
+                   (:input :type "file" :name "file")
+                   (:input :type "submit"))
+            (when file
+              (htm
+               (:p "Validation results:")
+               (:pre (str (validate-ud (first file) lang)))))))))    
+                 
+(hunchentoot:define-easy-handler (validate-handler :uri "/validate") (file)
+  (setf (hunchentoot:content-type*) "application/json")
+  (let ((sentences (cl-conllu:read-conllu (first file))))
+    (if sentences
+        (yason:with-output-to-string* ()
+          (yason:with-array ()
+            (dolist (s sentences)
+              (yason:encode-array-element (validate-sentence s)))))
+        (yason:encode-plist '(:error "invalid file")))))
 
 (defun start-server (&optional (port 5000))
   (hunchentoot:start
    (make-instance 'hunchentoot:easy-acceptor
 		  :port port)))
+

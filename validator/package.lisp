@@ -1,5 +1,5 @@
 ;;;; package.lisp
 
 (defpackage #:conll-validator
-  (:use #:cl))
+  (:use #:cl #:cl-who #:alexandria))
 

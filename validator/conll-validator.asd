@@ -18,7 +18,7 @@
   :version "0.1"
   :license "see LICENSE"
   :serial t
-  :depends-on (#:cl-conllu #:hunchentoot #:inferior-shell #:yason #:alexandria)
+  :depends-on (#:cl-conllu #:hunchentoot #:inferior-shell #:yason #:alexandria #:cl-who)
   :components ((:file "package")
                (:file "conll-validator")))
 
