@@ -4,7 +4,7 @@ MAINTAINER fchalub@br.ibm.com
 
 WORKDIR /root/
 
-RUN apt-get update -y && apt-get install -y git python sbcl tmux screen && apt-get clean
+RUN apt-get update -y && apt-get install -y git python sbcl screen && apt-get clean
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
