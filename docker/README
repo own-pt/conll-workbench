@@ -17,3 +17,15 @@ and
 curl -F "file=@CP9.conllu" -F "lang=pt_bosque" http://localhost:5000/validate
 
 (this will execute the CL-CONLLU validation routine)
+
+To deploy to Bluemix:
+
+$ cf login
+$ cf ic login
+# first, get your namespace:
+$ cf ic namespace get
+<namespace>
+$ docker tag conll-validator registry.ng.bluemix.net/<namespace>/conll-validator
+$ docker push registry.ng.bluemix.net/<namespace>/conll-validator
+# verify
+$ cf ic images
