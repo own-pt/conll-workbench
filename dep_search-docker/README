@@ -1,3 +1,8 @@
+Container to execute University of Turku's dep_search tool:
+
+- https://github.com/fginter/dep_search
+- https://github.com/fginter/dep_search_serve
+
 To build:
 
 docker build -t dep-search .
