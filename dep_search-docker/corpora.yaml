@@ -1,0 +1,3 @@
+bosque:
+  paths: /root/bosque.db
+  name: "Bosque-UD"
