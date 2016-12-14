@@ -6,18 +6,6 @@ To run locally:
 
 docker run -ti -p 5000:5000 dep-search
 
-To test it, submit a CONLL file via curl as follows:
-
-curl -F "file=@CP9.conllu" -F "lang=pt_bosque" http://localhost:5000/validate-ud
-
-(this will execute the "official" validator tool from Universal Dependencies)
-
-and
-
-curl -F "file=@CP9.conllu" -F "lang=pt_bosque" http://localhost:5000/validate
-
-(this will execute the CL-CONLLU validation routine)
-
 To deploy to Bluemix:
 
 $ cf login
