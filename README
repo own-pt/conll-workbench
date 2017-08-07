@@ -2,5 +2,7 @@ A series of tools for manipulating CONLL-U files; validator web service, editor.
 
 If want to test it out, you can use:
 
-http://conll-validator.mybluemix.net/form
-http://bosque.mybluemix.net
+1. http://wnpt.brlcloud.com/validator/form
+2. Interface de Busca
+ - UI: http://wnpt.brlcloud.com/dep_search_webgui/ 
+ - API: http://wnpt.brlcloud.com/dep_search_webapi/
